@@ -1,18 +1,20 @@
+import { collision } from "./utils.js"
+
 export class Player {
-    constructor(game, collisionBlock){
+    constructor(x, y, game){
         this.game = game
-        this.collisionBlock = collisionBlock
-        this.onPlatform = false;
+        this.onPlatform = false
         
         // Size
         this.width = 50
         this.height = 50
         
         // Placement
-        this.x = 0
-        this.y = this.game.height - this.height
+        this.x = x
+        this.y = y
 
         // Movement
+        this.vx = 0
         this.vy = 0
         this.weight = 1
         this.speed = 0
@@ -20,25 +22,87 @@ export class Player {
     }
 
     update(input, deltaTime){
+
+        this.onPlatform = false;
+
         
         // Movement
-        this.x += this.speed
-        if (input.includes('ArrowRight')) this.speed = this.maxSpeed
-        else if (input.includes('ArrowLeft')) this.speed = -this.maxSpeed
-        else this.speed = 0
+        this.x += this.vx
+        // When the right arrow key is pressed, increment the character's x-coordinate.
+        if (input.includes('ArrowRight')) {
+            this.speed = this.maxSpeed
+            this.vx = this.speed
+        }
+        //When the left arrow key is pressed, decrement the character's x-coordinate.
+        else if (input.includes('ArrowLeft')) {
+            this.speed = -this.maxSpeed
+            this.vx = this.speed
+        }
+        else { 
+            this.speed = 0
+            this.vx = 0
+        }
 
         if (this.x < 0) this.x = 0
         if (this.x > this.game.width - this.width) this.x = this.game.width - this.width
 
+        
+// THIS NEEDS WORK, WORKING ON THE PLATFORM COLLISION BUT BUG IN THE COLLISION BOTTOM STATMENT WHERE YOU SINK INTO THE PLATFORMS
+        this.game.collisionBlocks.forEach(collisionBlock => {
+            const collisionCheck = collision(this, collisionBlock);
+            
+            let isPureBottomCollision = collisionCheck.includes("collisionBottom") &&
+                                        !collisionCheck.includes("collisionTop") &&
+                                        !collisionCheck.includes("collisionLeft") &&
+                                        !collisionCheck.includes("collisionRight");
+        
+            if (isPureBottomCollision) {
+                console.log("pure bottom collision")
+                this.y = collisionBlock.y - this.height
+                this.vy = 0
+                this.onPlatform = true
+            } else {
+                if (collisionCheck.includes("collisionBottom")) {
+                    console.log("bottom")
+                    this.vy = 0
+                }
+                if (collisionCheck.includes("collisionTop")) {
+                    console.log("top")
+                    this.vy = 0
+                }
+                if (collisionCheck.includes("collisionLeft")) {
+                    console.log("left")
+                    this.vx = 0
+                }
+                if (collisionCheck.includes("collisionRight")) {
+                    console.log("right")
+                    this.vx = 0
+                }
+            }
+        })
+        
+        
+
+
         this.y += this.vy
-        if (this.onPlatform === true && input.includes(' ') || this.onGround() && input.includes(' ')) {
-            this.onPlatform = false
+        // When the jump key is pressed, temporarily decrement the character's y-coordinate and then increment it back to simulate a jump.
+        if (this.onGround() && input.includes(' ')) {
             this.vy -= 15
-        } else if (!this.onGround() && !this.onPlatform) { // add a check for not being on a platform
-            this.vy += this.weight
-        } else {
-            this.vy = 0
         }
+        else if (this.onPlatform === true && input.includes(' ')) {
+            this.vy -= 15
+            this.onPlatform = false
+        }
+        // If not colliding, increment the character's y-coordinate to simulate gravity pulling them downwards.
+        else if (!this.onGround() && this.onPlatform === false) {
+            this.vy += this.weight
+        } 
+        // If a collision with the ground is detected, stop updating the character's y-coordinate downward.
+        else if (this.onGround()){
+            this.vy = 0
+            this.y = this.game.height - this.height
+        } 
+
 
         
     }
@@ -48,6 +112,7 @@ export class Player {
         context.fillRect(this.x, this.y, this.width, this.height)
     }
 
+//Continuously check if the character is colliding with a ground object.
     onGround(){
         return this.y >= this.game.height - this.height
     }

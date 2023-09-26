@@ -1,7 +1,7 @@
 import { Player } from "./player.js"
 import { InputHandler } from "./input.js"
 import { CollisionBlock } from "./collisionBlocks.js"
-import { platformCollision } from "./utils.js"
+import { floorCollisions } from "../data/collisions.js"
 
 
 
@@ -19,41 +19,78 @@ window.addEventListener("load", function(){
         constructor(width, height){
             this.width = width
             this.height = height
-            this.bgImage = new Image();
-            this.bgImage.src = 'img/bg.png';
-            this.player = new Player(this)
             this.input = new InputHandler()
-            this.collisionBlock = new CollisionBlock(this.width - 500, 980, 200)
+            this.collisionBlocks = [];
+
+
+
+            
 
             this.cameraZoom = 1.5
 
+            const floorCollisions2D = []
+            for (let i = 0; i < floorCollisions.length; i += 30) {
+            floorCollisions2D.push(floorCollisions.slice(i, i + 30))
+            }
+
+            floorCollisions2D.forEach((row, y) => {
+            row.forEach((symbol, x) => {
+                if (symbol === 202) {
+                    console.log(symbol)
+                this.collisionBlocks.push(
+                    new CollisionBlock({
+                        x: x * 36,
+                        y: y * 36,
+                        ctx
+                    })
+                )
+                }
+            })
+            })
+
+            this.player = new Player(0, this.height - 500, this, this.collisionBlocks)
+
+
         }
+
+        
 
         update(deltaTime){
             this.player.update(this.input.keys, deltaTime)
+  
 
-            if (platformCollision({object1: this.player, object2: this.collisionBlock})) {
-              this.player.onPlatform = true
-          } else {
-              this.player.onPlatform = false
-          }
+
+
         }
 
         draw(context){
-            context.save()
-
-            context.drawImage(this.bgImage, 0, 0, this.width, this.height);
-
-
-            context.scale(this.cameraZoom, this.cameraZoom)
-            context.translate(-this.player.x + this.width / (2 * this.cameraZoom), -this.player.y + this.height / (1.4 * this.cameraZoom))
-
-            this.player.draw(context)
-            this.collisionBlock.draw(context)
+            // Clear the canvas
+            context.clearRect(0, 0, this.width, this.height);
+        
+            // Fill the outer bounds with a different color
+            context.fillStyle = 'grey';
+            context.fillRect(0, 0, this.width, this.height);
+        
+            context.save(); // Save the current state
+        
+            // Scale and translate here
+            context.scale(this.cameraZoom, this.cameraZoom);
+            context.translate(-this.player.x + this.width / (2 * this.cameraZoom), -this.player.y + this.height / (1.4 * this.cameraZoom));
+        
+            // Fill the canvas view (after scaling) with another color (e.g., 'white')
+            context.fillStyle = 'black';
+            context.fillRect(this.player.x - this.width / (2 * this.cameraZoom), this.player.y - this.height / (1.4 * this.cameraZoom), this.width / this.cameraZoom, this.height / this.cameraZoom);
+        
+            // Then draw the rest of your objects
+            this.collisionBlocks.forEach((collisionBlock) => {
+                collisionBlock.update();
+            });
+        
+            this.player.draw(context);
             
-            context.restore()
-            
+            context.restore(); // Restore to the saved state
         }
+        
       }
 
       
