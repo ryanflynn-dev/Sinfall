@@ -64,31 +64,24 @@ window.addEventListener("load", function(){
         }
 
         draw(context){
-            // Clear the canvas
             context.clearRect(0, 0, this.width, this.height);
+    
         
-            // Fill the outer bounds with a different color
-            context.fillStyle = 'grey';
-            context.fillRect(0, 0, this.width, this.height);
+            context.save(); 
         
-            context.save(); // Save the current state
-        
-            // Scale and translate here
             context.scale(this.cameraZoom, this.cameraZoom);
             context.translate(-this.player.x + this.width / (2 * this.cameraZoom), -this.player.y + this.height / (1.4 * this.cameraZoom));
         
-            // Fill the canvas view (after scaling) with another color (e.g., 'white')
-            context.fillStyle = 'black';
+            context.fillStyle = 'white';
             context.fillRect(this.player.x - this.width / (2 * this.cameraZoom), this.player.y - this.height / (1.4 * this.cameraZoom), this.width / this.cameraZoom, this.height / this.cameraZoom);
         
-            // Then draw the rest of your objects
             this.collisionBlocks.forEach((collisionBlock) => {
                 collisionBlock.update();
             });
         
             this.player.draw(context);
             
-            context.restore(); // Restore to the saved state
+            context.restore(); 
         }
         
       }
@@ -98,7 +91,7 @@ window.addEventListener("load", function(){
 
 
     const game = new Game(canvas.width, canvas.height)
-    console.log(game)
+
 
 
 
