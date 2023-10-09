@@ -2,6 +2,7 @@ import { Player } from "./player.js"
 import { InputHandler } from "./input.js"
 import { CollisionBlock } from "./collisionBlocks.js"
 import { floorCollisions } from "../data/collisions.js"
+
 window.addEventListener("load", function(){
     const canvas = document.getElementById("game")
     const ctx = canvas.getContext("2d")
@@ -25,12 +26,14 @@ window.addEventListener("load", function(){
                         new CollisionBlock({
                             x: x * 36,
                             y: y * 36,
-                            ctx
+                            ctx,
+                            width: 36,
+                            height: 36
                         })
                     )}
                 })
             })
-            this.player = new Player(0, this.height - 500, this, this.collisionBlocks)
+            this.player = new Player(0, this.height - 500, this)
         }
         update(deltaTime){
             this.player.update(this.input.keys, deltaTime)
