@@ -2,6 +2,7 @@ import { Player } from "./player.js"
 import { InputHandler } from "./input.js"
 import { CollisionBlock } from "./collisionBlocks.js"
 import { floorCollisions } from "../data/collisions.js"
+import { Enemy } from "./enemy.js"
 
 window.addEventListener("load", function(){
     const canvas = document.getElementById("game")
@@ -34,9 +35,11 @@ window.addEventListener("load", function(){
                 })
             })
             this.player = new Player(0, this.height - 500, this)
+            this.enemy = new Enemy(0, this.height - 500, this)
         }
         update(deltaTime){
             this.player.update(this.input.keys, deltaTime)
+            this.enemy.update(deltaTime)
         }
         draw(context){
             context.clearRect(0, 0, this.width, this.height)
@@ -49,6 +52,7 @@ window.addEventListener("load", function(){
                 collisionBlock.update()
             })
             this.player.draw(context)
+            this.enemy.draw(context)
             context.restore()
         }
       }

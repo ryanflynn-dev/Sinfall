@@ -1,7 +1,7 @@
 import { collision } from "./utils.js"
 
-export class Player {
-    constructor(x, y, game){
+export class Enemy {
+    constructor(x, y, game) {
         this.game = game
         this.onPlatform = false
         this.width = 50
@@ -12,21 +12,11 @@ export class Player {
         this.vy = 0
         this.weight = 1
         this.speed = 0
-        this.maxSpeed = 10
+        this.maxSpeed = 2
     }
-    update(input, deltaTime){
+    update(deltaTime){
         this.onPlatform = false
         this.x += this.vx
-        if (input.includes('d')) {
-            this.speed = this.maxSpeed
-            this.vx = this.speed
-        } else if (input.includes('a')) {
-            this.speed = -this.maxSpeed
-            this.vx = this.speed
-        } else { 
-            this.speed = 0
-            this.vx = 0
-        }
         if (this.x < 0) this.x = 0
         if (this.x > this.game.width - this.width) this.x = this.game.width - this.width
         this.game.collisionBlocks.forEach(collisionBlock => {
@@ -40,18 +30,14 @@ export class Player {
                     this.vy = 0
                 } if (collisionCheck.includes("collisionLeft")) {
                     this.vx = 0
+                    this.vx -= this.maxSpeed
                 } if (collisionCheck.includes("collisionRight")) {
                     this.vx = 0
+                    this.vx += this.maxSpeed
                 }
         })
-        
         this.y += this.vy
-        if (this.onGround() && input.includes(',')) {
-            this.vy -= 15
-        } else if (this.onPlatform === true && input.includes(',')) {
-            this.vy -= 15
-            this.onPlatform = false
-        } else if (!this.onGround() && this.onPlatform === false) {
+        if (!this.onGround() && this.onPlatform === false) {
             this.vy += this.weight
         } else if (this.onGround()){
             this.vy = 0
@@ -59,7 +45,7 @@ export class Player {
         } 
     }
     draw(context){
-        context.fillStyle = 'red'
+        context.fillStyle = 'green'
         context.fillRect(this.x, this.y, this.width, this.height)
     }
     onGround(){
