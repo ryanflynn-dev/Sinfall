@@ -13,6 +13,9 @@ export class Enemy {
         this.weight = 1
         this.speed = 0
         this.maxSpeed = 2
+        this.image = document.getElementById('peach')
+        this.frameX = 0
+        this.frameY = 0
     }
     update(deltaTime){
         this.onPlatform = false
@@ -44,9 +47,8 @@ export class Enemy {
             this.y = this.game.height - this.height
         } 
     }
-    draw(context){
-        context.fillStyle = 'green'
-        context.fillRect(this.x, this.y, this.width, this.height)
+    draw(ctx){
+        ctx.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height)
     }
     onGround(){
         return this.y >= this.game.height - this.height

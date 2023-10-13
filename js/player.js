@@ -15,7 +15,10 @@ export class Player {
         this.maxSpeed = 10
         this.attacking = false
         this.state = "idle"
-        this.context = this.game.context
+        this.attack = this.attack.bind(this)
+        this.image = document.getElementById('eggplant')
+        this.frameX = 0
+        this.frameY = 0
     }
     update(input, deltaTime){
         this.onPlatform = false
@@ -37,7 +40,7 @@ export class Player {
         if (this.x < 0) this.x = 0
         if (this.x > this.game.width - this.width) this.x = this.game.width - this.width
         this.game.collisionBlocks.forEach(collisionBlock => {
-            const DIFF = collisionBlock.y - 50
+            const DIFF = collisionBlock.y - this.height
             const collisionCheck = collision(this, collisionBlock)
                 if (collisionCheck.includes("collisionBottom") && this.vy > 0) {
                     this.vy = 0
@@ -74,11 +77,9 @@ export class Player {
         if (input.includes('.')) {
             this.attack()
         }
-        console.log(this.state)
     }
-    draw(context){
-        context.fillStyle = 'black'
-        context.fillRect(this.x, this.y, this.width, this.height)
+    draw(ctx){
+        ctx.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height)
     }
     onGround(){
         return this.y >= this.game.height - this.height

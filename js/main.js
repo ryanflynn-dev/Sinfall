@@ -27,9 +27,9 @@ window.addEventListener("load", function(){
                         new CollisionBlock({
                             x: x * 36,
                             y: y * 36,
-                            ctx,
                             width: 36,
-                            height: 36
+                            height: 36,
+                            ctx
                         })
                     )}
                 })
@@ -41,19 +41,19 @@ window.addEventListener("load", function(){
             this.player.update(this.input.keys, deltaTime)
             this.enemy.update(deltaTime)
         }
-        draw(context){
-            context.clearRect(0, 0, this.width, this.height)
-            context.save()
-            context.scale(this.cameraZoom, this.cameraZoom)
-            context.translate(-this.player.x + this.width / (2 * this.cameraZoom), -this.player.y + this.height / (1.4 * this.cameraZoom))
-            context.fillStyle = 'white'
-            context.fillRect(this.player.x - this.width / (2 * this.cameraZoom), this.player.y - this.height / (1.4 * this.cameraZoom), this.width / this.cameraZoom, this.height / this.cameraZoom)
+        draw(ctx){
+            ctx.clearRect(0, 0, this.width, this.height)
+            ctx.save()
+            ctx.scale(this.cameraZoom, this.cameraZoom)
+            ctx.translate(-this.player.x + this.width / (2 * this.cameraZoom), -this.player.y + this.height / (1.4 * this.cameraZoom))
+            ctx.fillStyle = 'black'
+            ctx.fillRect(this.player.x - this.width / (2 * this.cameraZoom), this.player.y - this.height / (1.4 * this.cameraZoom), this.width / this.cameraZoom, this.height / this.cameraZoom)
             this.collisionBlocks.forEach((collisionBlock) => {
                 collisionBlock.update()
             })
-            this.player.draw(context)
-            this.enemy.draw(context)
-            context.restore()
+            this.player.draw(ctx)
+            this.enemy.draw(ctx)
+            ctx.restore()
         }
       }
     const game = new Game(canvas.width, canvas.height)
