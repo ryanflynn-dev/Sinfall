@@ -1,3 +1,4 @@
+import { MeleeHitBox } from "./hitBox.js"
 import { collision } from "./utils.js"
 
 export class Enemy {
@@ -8,14 +9,19 @@ export class Enemy {
         this.height = 50
         this.x = x
         this.y = y
-        this.vx = 0
+        this.vx = 2
         this.vy = 0
         this.weight = 1
         this.speed = 0
         this.maxSpeed = 2
-        this.image = document.getElementById('peach')
+        this.image = document.getElementById('enemy-right')
+        this.imageRight = document.getElementById('enemy-right')
+        this.imageLeft = document.getElementById('enemy-left')
         this.frameX = 0
         this.frameY = 0
+        this.health = 30
+        this.state = "idle"
+        this.invincible = false
     }
     update(deltaTime){
         this.onPlatform = false
@@ -34,9 +40,11 @@ export class Enemy {
                 } if (collisionCheck.includes("collisionLeft")) {
                     this.vx = 0
                     this.vx -= this.maxSpeed
+                    this.state = "left"
                 } if (collisionCheck.includes("collisionRight")) {
                     this.vx = 0
                     this.vx += this.maxSpeed
+                    this.state = "right"
                 }
         })
         this.y += this.vy
@@ -48,8 +56,15 @@ export class Enemy {
         } 
     }
     draw(ctx){
-        ctx.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height)
-    }
+        if (this.state === "idle"){
+            ctx.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height)
+        } else if (this.state === "right" || this.state === "idleRight"){
+            ctx.drawImage(this.imageRight, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height)
+        } else if (this.state === "left" || this.state === "idleLeft"){
+            ctx.drawImage(this.imageLeft, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height)
+        } else {
+            ctx.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height)
+        }    }
     onGround(){
         return this.y >= this.game.height - this.height
     }
