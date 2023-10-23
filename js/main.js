@@ -1,3 +1,4 @@
+import { hit } from "./utils.js"
 import { Player } from "./player.js"
 import { InputHandler } from "./input.js"
 import { CollisionBlock } from "./collisionBlocks.js"
@@ -34,27 +35,57 @@ window.addEventListener("load", function(){
                     )}
                 })
             })
-            this.player = new Player(0, this.height - 500, this)
-            this.enemy = new Enemy(0, this.height - 500, this)
+            this.player = new Player(50, this.height - 500, this)
+            this.enemy = new Enemy(50, this.height - 500, this)
         }
         update(deltaTime){
-            this.player.update(this.input.keys, deltaTime)
-            this.enemy.update(deltaTime)
+            const enemy = this.enemy
+            const player = this.player
+            player.update(this.input.keys, deltaTime)
+            if (enemy){
+                enemy.update(deltaTime)
+                if (hit(player.attackBox, enemy) && enemy.invincible === false && !player.hitRegistered){
+                    player.hitRegistered = true;
+                    if (enemy.health > 0) {
+                        this.enemyHit()
+                        setTimeout(() => {
+                            this.enemy.invincible = false
+                        }, 100)
+                    } else {
+                        this.enemy = null
+                    }
+                }
+                if (!player.attacking) {
+                    player.hitRegistered = false
+                }
+            }
+            if (this.enemy === null){
+                this.enemy = new Enemy(50, this.height - 500, this)
+            }
         }
         draw(ctx){
             ctx.clearRect(0, 0, this.width, this.height)
             ctx.save()
             ctx.scale(this.cameraZoom, this.cameraZoom)
             ctx.translate(-this.player.x + this.width / (2 * this.cameraZoom), -this.player.y + this.height / (1.4 * this.cameraZoom))
-            ctx.fillStyle = 'black'
+            ctx.fillStyle = 'maroon'
             ctx.fillRect(this.player.x - this.width / (2 * this.cameraZoom), this.player.y - this.height / (1.4 * this.cameraZoom), this.width / this.cameraZoom, this.height / this.cameraZoom)
             this.collisionBlocks.forEach((collisionBlock) => {
                 collisionBlock.update()
             })
             this.player.draw(ctx)
-            this.enemy.draw(ctx)
+            if (this.enemy){
+                this.enemy.draw(ctx)
+            }
             ctx.restore()
         }
+        enemyHit(){
+            const enemy = this.enemy
+            const player = this.player
+            player.attacking = false
+            enemy.invincible = true
+            enemy.health -= 1
+          }
       }
     const game = new Game(canvas.width, canvas.height)
     let lastTime = 0
@@ -68,3 +99,4 @@ window.addEventListener("load", function(){
     }
     animate(0)
 })
+
