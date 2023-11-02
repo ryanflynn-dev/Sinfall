@@ -20,7 +20,6 @@ export function collision(object1, object2) {
     }
     return collisions
 }
-
 export function hit(obj1, obj2) {
     return obj1.x < obj2.x + obj2.width &&
            obj1.x + obj1.width > obj2.x &&

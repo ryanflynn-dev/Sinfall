@@ -1,4 +1,3 @@
-import { MeleeHitBox } from "./hitBox.js"
 import { collision } from "./utils.js"
 
 export class Enemy {
@@ -23,7 +22,7 @@ export class Enemy {
         this.state = "idle"
         this.invincible = false
     }
-    update(deltaTime){
+    update(){
         this.onPlatform = false
         this.x += this.vx
         if (this.x < 0) this.x = 0
