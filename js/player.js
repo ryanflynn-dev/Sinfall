@@ -25,7 +25,7 @@ export class Player {
         this.frameX = 0
         this.frameY = 0
     }
-    update(input, deltaTime){
+    update(input){
         this.onPlatform = false
         this.x += this.vx
         if (input.includes('d')) {
@@ -93,9 +93,8 @@ export class Player {
         } else {
             ctx.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height)
         }
-
         if (this.attacking){
-            let attackBox = null
+            let attackBox = 0
             if (this.state === "right" || this.state === "idleRight" || this.state === "idle") {
                 this.attackDirection = "right"
                 attackBox = new MeleeHitBox(this.x + this.width - 15, this.y + 10, "right", 50, 50, ctx)
@@ -130,5 +129,4 @@ export class Player {
                 this.attacking = false
             }, 50)
     }
-
 }

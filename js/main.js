@@ -37,13 +37,15 @@ window.addEventListener("load", function(){
             })
             this.player = new Player(50, this.height - 500, this)
             this.enemy = new Enemy(50, this.height - 500, this)
+            this.enemy2 = new Enemy(100, this.height - 500, this)
         }
-        update(deltaTime){
+        update(){
             const enemy = this.enemy
+            const enemy2 = this.enemy2
             const player = this.player
-            player.update(this.input.keys, deltaTime)
+            player.update(this.input.keys, )
             if (enemy){
-                enemy.update(deltaTime)
+                enemy.update()
                 if (hit(player.attackBox, enemy) && enemy.invincible === false && !player.hitRegistered){
                     player.hitRegistered = true;
                     if (enemy.health > 0) {
@@ -90,13 +92,12 @@ window.addEventListener("load", function(){
     const game = new Game(canvas.width, canvas.height)
     let lastTime = 0
     function animate(timeStamp){
-        const deltaTime = timeStamp - lastTime
+
         lastTime = timeStamp
         ctx.clearRect(0, 0, canvas.width, canvas.height)
-        game.update(deltaTime)
+        game.update()
         game.draw(ctx)
         requestAnimationFrame(animate)
     }
     animate(0)
 })
-
