@@ -1,6 +1,6 @@
 import { FRICTION, GRAVITY, GROUND } from './physics.js'
 
-export class Enemy {
+export class Npc {
     constructor(id, x, y, health, attackPower, defencePower, experience) {
         this.id = id;
         //Position
@@ -12,7 +12,7 @@ export class Enemy {
 
         //Rendering
         this.sprite = new Image();
-        this.sprite.src = 'assets/sinfall-peach.png';
+        this.sprite.src = 'assets/sinfall-tomato.png';
 
         //Movement
         this.vX = 0;
