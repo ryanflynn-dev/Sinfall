@@ -36,7 +36,7 @@ export class Enemy {
             context.drawImage(this.sprite, this.x, this.y, this.width, this.height);
         } else {
             context.fillStyle = 'red';
-            context.fillRect(this.x, this.y, this.width, this.height)
+            context.fillRect(this.x, this.y, this.width, this.height);
         }
     }
     update() {
@@ -47,7 +47,7 @@ export class Enemy {
 
         if (!this.onGround()){
             this.vY += GRAVITY * this.weight;
-        } else this.vY = 0
+        } else this.vY = 0;
 
         if (this.y + this.height > GROUND) {
             this.y = GROUND - this.height;
@@ -57,7 +57,7 @@ export class Enemy {
     #setHealth(newHealth) {
         if(newHealth >= 0){
             this.health = newHealth;
-        } else this.die()
+        } else this.die();
     }
     move(direction) {
         this.vX += direction * this.acceleration;
@@ -70,7 +70,7 @@ export class Enemy {
     }
     gotHit(damage) {
         const newHealth = this.health - damage / this.defencePower;
-        this.#setHealth(newHealth)
+        this.#setHealth(newHealth);
     }
     onGround() {
         return this.y + this.height >= GROUND;
@@ -80,6 +80,6 @@ export class Enemy {
         this.giveExp();
     }
     giveExp() {
-        return this.experience
+        return this.experience;
     }
 }

@@ -80,6 +80,6 @@ export class Npc {
         this.giveExp();
     }
     giveExp() {
-        return this.experience
+        return this.experience;
     }
 }

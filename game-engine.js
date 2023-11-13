@@ -25,6 +25,7 @@ let currentLevel = new Level(level1Data);
 currentLevel.load(); 
 let enemies = currentLevel.enemies;
 let npcs = currentLevel.npcs;
+let potions = currentLevel.potions;
 let platforms = currentLevel.platforms;
 
 initializeInputHandlers();
@@ -50,8 +51,11 @@ export function gameLoop() {
     player.update();
     player.render(context);
     player.renderAttackHitbox(context);
+    player.updateProjectiles();
+    player.renderProjectiles(context);
     collidingWithBoundaries(player, canvas);
     checkIfOnPlatform(player, platforms);
+    
 
     //ENEMIES
     for (let i = enemies.length - 1; i >= 0; i--) {
@@ -73,9 +77,8 @@ export function gameLoop() {
 
     //NPCS
     for (let i = npcs.length - 1; i >= 0; i--) {
-        if (!npcs[i].isAlive) {
-            player.gainExp(npcs[i].giveExp());
-            npcs.splice(i, 1);
+        if (!npcs[i].isAlive){
+
         } else {
             npcs[i].update();
             npcs[i].render(context);
@@ -86,6 +89,24 @@ export function gameLoop() {
         if (isColliding(player, npc)) {
         }
         collidingWithBoundaries(npc, canvas);
+    });    
+    
+    //ITEMS
+    for (let i = potions.length - 1; i >= 0; i--) {
+        if (!potions[i].unused){
+            player.gainHealth(potions[i].giveHealth());
+            potions.splice(i, 1);
+        } else {
+            potions[i].update();
+            potions[i].render(context);
+        }
+    }
+    potions.forEach(potion => {
+        checkIfOnPlatform(potion, platforms)
+        if (isColliding(player, potion)) {
+            potion.unused = false;
+        }
+        collidingWithBoundaries(potion, canvas);
     });
 
     //COMBAT SYSTEM
@@ -97,6 +118,14 @@ export function gameLoop() {
         });
         player.resetAttack();
     }
+    player.projectiles.forEach((projectile, index) => {
+        enemies.forEach(enemy => {
+            if (isColliding(projectile, enemy)) {
+                enemy.gotHit(player.attackPower)
+                player.projectiles.splice(index, 1);
+            }
+        })
+    });
 
     //Levels
     if (enemies.length === 0){
@@ -105,6 +134,7 @@ export function gameLoop() {
         enemies = currentLevel.enemies;
         npcs = currentLevel.npcs;
         platforms = currentLevel.platforms;
+        potions = currentLevel.potions;
     }
 
     camera.resetTransformations(context);
