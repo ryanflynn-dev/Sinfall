@@ -4,7 +4,8 @@ const inputState = {
     up: false,
     down: false,
     jump: false,
-    attack: false 
+    attack: false,
+    shoot: false
 }
 
 function handleKeydown(event) {
@@ -27,6 +28,9 @@ function handleKeydown(event) {
         case 'Period':
             inputState.attack = true;
             break;
+        case 'Slash':
+            inputState.shoot = true;
+           break;
     }
 }
 
@@ -49,6 +53,9 @@ function handleKeyup(event) {
             break;
         case 'Period':
             inputState.attack = false;
+            break;
+        case 'Slash':
+            inputState.shoot = false;
             break;
     }
 }

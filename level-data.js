@@ -10,12 +10,17 @@ export const level1Data = {
     ],
     npcs: [
         { id: 1, x: 550, y: 850, health: 1, attackPower: 10, defencePower: 10, experience: 50 },
-        { id: 1, x: 850, y: 450, health: 1, attackPower: 10, defencePower: 10, experience: 50 },
-        { id: 1, x: 400, y: 550, health: 1, attackPower: 10, defencePower: 10, experience: 50 },
-        { id: 1, x: 700, y: 650, health: 1, attackPower: 10, defencePower: 10, experience: 50 },
-        { id: 1, x: 100, y: 450, health: 1, attackPower: 10, defencePower: 10, experience: 50 },
-        { id: 1, x: 850, y: 250, health: 1, attackPower: 10, defencePower: 10, experience: 50 },
+        { id: 2, x: 850, y: 450, health: 1, attackPower: 10, defencePower: 10, experience: 50 },
+        { id: 3, x: 400, y: 550, health: 1, attackPower: 10, defencePower: 10, experience: 50 },
+        { id: 4, x: 700, y: 650, health: 1, attackPower: 10, defencePower: 10, experience: 50 },
+        { id: 5, x: 100, y: 450, health: 1, attackPower: 10, defencePower: 10, experience: 50 },
+        { id: 6, x: 850, y: 250, health: 1, attackPower: 10, defencePower: 10, experience: 50 },
 
+    ],
+    potions: [
+        { id: 1, x: 100, y: 200, healValue: 100 },
+        { id: 2, x: 300, y: 600, healValue: 50 },
+        { id: 3, x: 600, y: 750, healValue: 50 },
     ],
     platforms: [
         { x: 100, y: 900, width: 200 },
@@ -46,6 +51,11 @@ export const level2Data = {
     ],
     npcs: [
 
+    ],
+    potions: [
+        { id: 1, x: 100, y: 200, healValue: 100 },
+        { id: 2, x: 300, y: 600, healValue: 50 },
+        { id: 3, x: 600, y: 750, healValue: 50 },
     ],
     platforms: [
         { x: 100, y: 900, width: 400 },
