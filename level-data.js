@@ -1,6 +1,6 @@
 export const level1Data = {
     enemies: [
-        { id: 1, x: 500, y: 850, health: 1, attackPower: 10, defencePower: 10, experience: 50 },
+        { id: 1, x: 500, y: 850, health: 1000, attackPower: 10, defencePower: 10, experience: 50 },
         { id: 2, x: 800, y: 450, health: 1, attackPower: 10, defencePower: 10, experience: 20 },
         { id: 3, x: 350, y: 550, health: 1, attackPower: 10, defencePower: 10, experience: 40 },
         { id: 4, x: 650, y: 650, health: 1, attackPower: 10, defencePower: 10, experience: 70 },
@@ -42,11 +42,11 @@ export const level1Data = {
 
 export const level2Data = {
     enemies: [
-        { id: 1, x: 700, y: 50, health: 1, attackPower: 10, defencePower: 10, experience: 50 },
-        { id: 2, x: 200, y: 500, health: 1, attackPower: 10, defencePower: 10, experience: 20 },
-        { id: 3, x: 300, y: 200, health: 1, attackPower: 10, defencePower: 10, experience: 40 },
-        { id: 4, x: 500, y: 900, health: 1, attackPower: 10, defencePower: 10, experience: 70 },
-        { id: 5, x: 50, y: 100, health: 1, attackPower: 10, defencePower: 10, experience: 90 },
+        { id: 1, x: 700, y: 50, health: 100, attackPower: 10, defencePower: 10, experience: 50 },
+        { id: 2, x: 200, y: 500, health: 100, attackPower: 10, defencePower: 10, experience: 20 },
+        { id: 3, x: 300, y: 200, health: 100, attackPower: 10, defencePower: 10, experience: 40 },
+        { id: 4, x: 500, y: 900, health: 100, attackPower: 10, defencePower: 10, experience: 70 },
+        { id: 5, x: 50, y: 100, health: 100, attackPower: 10, defencePower: 10, experience: 90 },
 
     ],
     npcs: [

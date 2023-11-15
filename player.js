@@ -14,6 +14,11 @@ export class Player {
         //Rendering
         this.sprite = new Image();
         this.sprite.src = 'assets/sinfall-eggplant.png';
+        this.attackSpriteRight = new Image();
+        this.attackSpriteRight.src = 'assets/sinfall-melee-right.png'
+        this.attackSpriteLeft = new Image();
+        this.attackSpriteLeft.src = 'assets/sinfall-melee-left.png'
+
 
         //Movement
         this.vX = 0;
@@ -78,6 +83,9 @@ export class Player {
         if (input.up) {
             this.direction = "up";
         }
+        if (input.down) {
+            this.direction = "down"
+        }
         if (input.jump) {
             this.jump();
         }
@@ -93,30 +101,42 @@ export class Player {
             this.idle();
         }
     }
+    
     #setHealth(newHealth) {
         if(newHealth >= 0){
             this.health = newHealth;
         } else this.die()
     }
-    #setExp(amount) {
-        if(this.experience < 100){
-            this.experience += amount;
-            console.log(`Gained ${amount} EXP. Total EXP: ${this.experience}`);
-        }
-        if (this.experience >= 100) {
-            this.level++
-            this.experience -= 100;
-            console.log(`Level up! ${this.level}, Total EXP: ${this.experience}`);
 
+    #setExp(amount) {
+        this.experience += amount;
+        console.log(`Gained ${amount} EXP. Total EXP: ${this.experience}`);
+
+        while (this.experience >= 100) {
+            this.level++;
+            this.experience -= 100;
+
+            this.increaseStats();
+
+            console.log(`Level up! Level: ${this.level}, Total EXP: ${this.experience}`);
         }
     }
+
+    increaseStats() {
+        this.attackPower += 10;
+        this.defencePower += 10;
+        this.maxHealth += 10;
+    }
+
     gainExp(amount) {
         this.#setExp(amount);
     }
+
     gainHealth(healValue){
         const newHealth = this.health + healValue;
         this.#setHealth(newHealth);
-        }
+    }
+
     move(direction) {
         this.direction = direction > 0 ? 'right' : 'left';
         this.vX += direction * this.acceleration;
@@ -135,23 +155,62 @@ export class Player {
 
     attack() {
         this.isAttacking = true;
-        if (this.direction === 'right') {
-            this.attackHitbox = { x: this.x + this.width, y: this.y, width: 50, height: this.height };
-        } else if (this.direction === 'left') {
-            this.attackHitbox = { x: this.x - 50, y: this.y, width: 50, height: this.height };
+        let offsetX = 0;
+        let offsetY = 0;
+        const hitboxWidth = 50;
+        const hitboxHeight = this.height;
+
+        switch (this.direction) {
+            case 'right':
+                offsetX = this.width;
+                break;
+            case 'left':
+                offsetX = -hitboxWidth;
+                break;
+            case 'up':
+                offsetY = -hitboxHeight;
+                break;
+            case 'down':
+                offsetY = this.height;
+                break;
         }
+
+        this.attackHitbox = { 
+            x: this.x + offsetX, 
+            y: this.y + offsetY, 
+            width: hitboxWidth, 
+            height: hitboxHeight 
+        };
     }
-    //DEBUGGER
+
     renderAttackHitbox(context) {
         if (this.isAttacking) {
-            context.strokeStyle = 'rgba(255, 0, 0, 0.5)';
-            context.strokeRect(this.attackHitbox.x, this.attackHitbox.y, this.attackHitbox.width, this.attackHitbox.height);
+            const sprite = this.getAttackSprite();
+            if (sprite && sprite.complete) {
+                context.drawImage(sprite, this.attackHitbox.x, this.y, this.width, this.height);
+            } else {
+                context.fillStyle = 'rgba(255, 0, 0, 0.5)';
+                context.fillRect(this.attackHitbox.x, this.attackHitbox.y, this.attackHitbox.width, this.attackHitbox.height);
+            }
         }
     }
+
+    getAttackSprite() {
+        switch (this.direction) {
+            case 'right':
+                return this.attackSpriteRight;
+            case 'left':
+                return this.attackSpriteLeft;
+            default:
+                return null;
+        }
+    }
+
     resetAttack() {
         this.isAttacking = false;
         this.attackHitbox = null;
     }
+
     shoot(direction) {
         const currentTime = Date.now();
         if (currentTime - this.lastShotTime >= this.shootCooldown) {
@@ -182,6 +241,7 @@ export class Player {
             this.lastShotTime = currentTime;
         }
     }
+
     updateProjectiles() {
         this.projectiles.forEach(projectile => projectile.update());
         this.projectiles = this.projectiles.filter(projectile => !projectile.isExpired);
@@ -195,10 +255,12 @@ export class Player {
         const newHealth = this.health - damage / this.defencePower;
         this.#setHealth(newHealth);
     }
+
     die() {
         this.health = 0;
         console.log("gameover");
     }
+
     onGround() {
         return this.y + this.height >= GROUND || this.onPlatform;
     }
