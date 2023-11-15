@@ -30,6 +30,9 @@ export class Enemy {
         this.attackPower = attackPower;
         this.defencePower = defencePower;
         this.experience = experience || 0;
+
+        this.hitCooldown = 500;
+        this.lastHitTime = 0;
     }
     render(context) {
         if (this.sprite.complete) {
@@ -57,6 +60,7 @@ export class Enemy {
     #setHealth(newHealth) {
         if(newHealth >= 0){
             this.health = newHealth;
+            console.log(this.health)
         } else this.die();
     }
     move(direction) {
@@ -69,8 +73,14 @@ export class Enemy {
         }
     }
     gotHit(damage) {
-        const newHealth = this.health - damage / this.defencePower;
-        this.#setHealth(newHealth);
+        const currentTime = Date.now();
+
+        if (currentTime - this.lastHitTime >= this.hitCooldown) {
+            const newHealth = this.health - damage / this.defencePower;
+            this.#setHealth(newHealth);
+
+            this.lastHitTime = currentTime;
+        }
     }
     onGround() {
         return this.y + this.height >= GROUND;

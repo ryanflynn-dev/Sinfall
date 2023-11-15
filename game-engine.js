@@ -113,6 +113,7 @@ export function gameLoop() {
     if (player.isAttacking) {
         enemies.forEach(enemy => {
             if (isColliding(player.attackHitbox, enemy)) {
+                console.log(enemy.health)
                 enemy.gotHit(player.attackPower)
             }
         });
