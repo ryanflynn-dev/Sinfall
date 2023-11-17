@@ -2,10 +2,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Sinfall</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body style="margin: 0;padding: 0;box-sizing: border-box;background-color: black;">
-    <canvas id="gameCanvas" tabindex="0" style="border: 0px solid grey;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);max-width: 100%;max-height: 100%;"></canvas>
+<body>
+    <canvas id="gameCanvas" tabindex="0" ></canvas>
     <script type="module" src="./main.js"></script>
+
+    <div id="titleScreen" class="title-screen">
+        <h1>Sinfall</h1>
+        <button id="playButton">Play</button>
+    </div>
+
+    <div id="gameOverScreen" class="game-over-screen">
+        <h1>Game Over</h1>
+        <button id="replayButton">Replay</button>
+    </div>
+    
+    
 </body>
 </html>

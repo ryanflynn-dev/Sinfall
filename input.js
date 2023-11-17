@@ -31,6 +31,9 @@ function handleKeydown(event) {
         case 'Slash':
             inputState.shoot = true;
            break;
+        case 'Semicolon':
+            inputState.dash = true;
+           break;
     }
 }
 
@@ -57,6 +60,9 @@ function handleKeyup(event) {
         case 'Slash':
             inputState.shoot = false;
             break;
+        case 'Semicolon':
+            inputState.dash = false;
+           break;
     }
 }
 

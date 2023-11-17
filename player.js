@@ -26,6 +26,7 @@ export class Player {
         this.acceleration = 1;
         this.maxSpeed = 10;
         this.jumpStrength = 20;
+        this.dashSpeed = 30;
         this.direction = 'right';
 
         //Physics
@@ -36,12 +37,28 @@ export class Player {
         this.maxHealth = 100;
         this.health = 100;
         this.attackPower = 10;
+        this.defencePower = 50;
+        this.dashDuration = 200;
+        
+
+        //Arrays
+        this.projectiles = [];
+
+        //Switches
         this.isAttacking = false;
         this.attackHitbox = null;
-        this.defencePower = 50;
-        this.projectiles = [];
+        this.isDashing = false;
+        
+
+        //Timers
         this.lastShotTime = 0;
         this.shootCooldown = 1200;
+        this.lastAttackTime = 0;
+        this.attackCooldown = 500;
+        this.attackDuration = 4000;
+        this.attackEndTime = 0;
+        this.dashCooldown = 1000;
+        this.lastDashTime = 0;
 
         //Levelling
         this.experience = 0;
@@ -58,6 +75,8 @@ export class Player {
     }
 
     update() {
+        const currentTime = Date.now()
+
         this.vX *= FRICTION;
 
         this.x += this.vX;
@@ -69,6 +88,15 @@ export class Player {
 
         if (this.y + this.height > GROUND) {
             this.y = GROUND - this.height;
+        }
+
+        if (this.isDashing) {
+            const dashDirection = (this.direction === 'left') ? -1 : 1;
+            this.x += this.dashSpeed * dashDirection;
+        }
+
+        if (this.isAttacking && currentTime >= this.attackEndTime) {
+            this.resetAttack();
         }
 
     }
@@ -95,6 +123,9 @@ export class Player {
         if (input.shoot) {
             this.shoot(this.direction);
         }
+        if (input.dash) {
+            this.dash();
+        }
 
 
         if (!input.left && !input.right && !input.up && !input.jump && !input.attack && !input.shoot) {
@@ -103,9 +134,7 @@ export class Player {
     }
     
     #setHealth(newHealth) {
-        if(newHealth >= 0){
             this.health = newHealth;
-        } else this.die()
     }
 
     #setExp(amount) {
@@ -133,8 +162,12 @@ export class Player {
     }
 
     gainHealth(healValue){
+        if (this.health + healValue < this.maxHealth){
         const newHealth = this.health + healValue;
         this.#setHealth(newHealth);
+        } else if (this.health + healValue >= this.maxHealth){
+            this.#setHealth(this.maxHealth);
+        }
     }
 
     move(direction) {
@@ -153,38 +186,56 @@ export class Player {
     idle() {
     }
 
-    attack() {
-        this.isAttacking = true;
-        let offsetX = 0;
-        let offsetY = 0;
-        const hitboxWidth = 50;
-        const hitboxHeight = this.height;
-
-        switch (this.direction) {
-            case 'right':
-                offsetX = this.width;
-                break;
-            case 'left':
-                offsetX = -hitboxWidth;
-                break;
-            case 'up':
-                offsetY = -hitboxHeight;
-                break;
-            case 'down':
-                offsetY = this.height;
-                break;
+    dash() {
+        const currentTime = Date.now();
+        if (!this.isDashing && currentTime - this.lastDashTime >= this.dashCooldown) {
+            this.isDashing = true;
+            this.lastDashTime = currentTime;
+            setTimeout(() => {
+                this.isDashing = false;
+            }, this.dashDuration);
         }
+    }
+    
 
-        this.attackHitbox = { 
-            x: this.x + offsetX, 
-            y: this.y + offsetY, 
-            width: hitboxWidth, 
-            height: hitboxHeight 
-        };
+    attack() {
+        const currentTime = Date.now()
+        if (currentTime - this.lastAttackTime >= this.attackCooldown) {
+            this.isAttacking = true;
+            this.lastAttackTime = currentTime;
+            this.attackEndTime = currentTime + this.attackDuration;
+            let offsetX = 0;
+            let offsetY = 0;
+            const hitboxWidth = 50;
+            const hitboxHeight = this.height;
+
+            switch (this.direction) {
+                case 'right':
+                    offsetX = this.width;
+                    break;
+                case 'left':
+                    offsetX = -hitboxWidth;
+                    break;
+                case 'up':
+                    offsetY = -hitboxHeight;
+                    break;
+                case 'down':
+                    offsetY = this.height;
+                    break;
+            }
+
+            this.attackHitbox = { 
+                x: this.x + offsetX, 
+                y: this.y + offsetY, 
+                width: hitboxWidth, 
+                height: hitboxHeight 
+            };
+        }
     }
 
     renderAttackHitbox(context) {
-        if (this.isAttacking) {
+        const currentTime = Date.now()
+        if (this.isAttacking && currentTime < this.attackEndTime) {
             const sprite = this.getAttackSprite();
             if (sprite && sprite.complete) {
                 context.drawImage(sprite, this.attackHitbox.x, this.y, this.width, this.height);
@@ -217,13 +268,15 @@ export class Player {
             let velocityX = 0;
             let velocityY = 0;
             const speed = 15;
+            const projectileOffset = 25;
+            const offsetX = 10;
             let X = this.x;
             let Y = this.y;
 
             switch(direction) {
                 case 'right':
                     velocityX = speed;
-                    X = this.x + 25;
+                    X = this.x + projectileOffset;
                     break;
                 case 'left':
                     velocityX = -speed;
@@ -231,9 +284,13 @@ export class Player {
                     break;
                 case 'up':
                     velocityY = -speed;
-                    X = this.x + 10;
-                    Y = this.y - 20;
+                    X = this.x + offsetX;
+                    Y = this.y - projectileOffset - 5;
                     break;
+                case 'down':
+                    velocityY = speed;
+                    X = this.x + offsetX;
+                    Y = this.y + projectileOffset;
             }
 
             const projectile = new Projectile(X, Y, velocityX, velocityY);
@@ -258,7 +315,6 @@ export class Player {
 
     die() {
         this.health = 0;
-        console.log("gameover");
     }
 
     onGround() {

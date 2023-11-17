@@ -1,10 +1,9 @@
-import { Player } from './player.js';
 import { initializeInputHandlers, getInputState } from './input.js';
-import { checkIfOnPlatform, isColliding, collidingWithBoundaries } from './physics.js';
+import { checkIfOnPlatform, isColliding, collidingWithBoundaries, handleWallCollisions, handleTopCollisions, handleBottomCollisions } from './physics.js';
 import { Camera } from './camera.js';
 import { renderUI } from './ui.js';
 import { Level } from './level.js';
-import { level1Data, level2Data } from './level-data.js';
+import { level1Data, level2Data, level3Data, level4Data } from './level-data.js';
 
 //CANVAS
 document.getElementById('gameCanvas').focus();
@@ -16,21 +15,33 @@ canvas.height = 1080;
 const backgroundImage = new Image();
 backgroundImage.src = 'assets/sinfall-background.png';
 
-//PLAYER
-const player = new Player(100, 500);
+
 
 //WORLD
-const camera = new Camera(player, canvas.width, canvas.height)
+let level = 1;
 let currentLevel = new Level(level1Data);
 currentLevel.load(); 
 let enemies = currentLevel.enemies;
 let npcs = currentLevel.npcs;
 let potions = currentLevel.potions;
 let platforms = currentLevel.platforms;
+let walls = currentLevel.walls;
+let tops = currentLevel.tops;
+let bottoms = currentLevel.bottoms;
+
+//PLAYER
+let players = currentLevel.player;
+let player = players[0];
+
+
+
 
 initializeInputHandlers();
 
-export function gameLoop() {    
+export function gameLoop() {
+    const camera = new Camera(player, canvas.width, canvas.height);
+   
+
     //CANVAS
     context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -40,21 +51,15 @@ export function gameLoop() {
     if (backgroundImage.complete) {
         context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
     } else {
-        context.fillStyle = 'black';
+        context.fillStyle = '#000d17';
         context.fillRect(0, 0, canvas.width, canvas.height);
     }
-    platforms.forEach(platform => platform.render(context))
+    platforms.forEach(platform => platform.render(context));
+    walls.forEach(wall => wall.render(context));
+    tops.forEach(top => top.render(context));
+    bottoms.forEach(bottom => bottom.render(context));
 
-    //PLAYER
-    const input = getInputState();
-    player.handleInput(input);
-    player.update();
-    player.render(context);
-    player.renderAttackHitbox(context);
-    player.updateProjectiles();
-    player.renderProjectiles(context);
-    collidingWithBoundaries(player, canvas);
-    checkIfOnPlatform(player, platforms);
+
     
 
     //ENEMIES
@@ -68,7 +73,11 @@ export function gameLoop() {
         }
     }
     enemies.forEach(enemy => {
-        checkIfOnPlatform(enemy, platforms)
+        checkIfOnPlatform(enemy, platforms);
+        handleBottomCollisions(enemy, bottoms);
+        handleWallCollisions(enemy, walls);
+        handleTopCollisions(enemy, tops);
+        // checkHorizontalWallCollision(enemy, walls);
         if (isColliding(player, enemy)) {
             player.gotHit(enemy.attackPower)
         }
@@ -85,7 +94,11 @@ export function gameLoop() {
         }
     }
     npcs.forEach(npc => {
-        checkIfOnPlatform(npc, platforms)
+        checkIfOnPlatform(npc, platforms);
+        handleBottomCollisions(npc, bottoms);
+        handleWallCollisions(npc, walls);
+        handleTopCollisions(npc, tops);
+        // checkIfWall(npc, walls);
         if (isColliding(player, npc)) {
         }
         collidingWithBoundaries(npc, canvas);
@@ -102,12 +115,33 @@ export function gameLoop() {
         }
     }
     potions.forEach(potion => {
-        checkIfOnPlatform(potion, platforms)
+        checkIfOnPlatform(potion, platforms);
+        handleBottomCollisions(potion, bottoms);
+        handleWallCollisions(potion, walls);
+        handleTopCollisions(potion, tops);
+        // checkIfWall(potion, walls);
         if (isColliding(player, potion)) {
             potion.unused = false;
         }
         collidingWithBoundaries(potion, canvas);
     });
+
+    //PLAYER
+    const input = getInputState();
+    player.handleInput(input);
+    player.update();
+    player.render(context);
+    player.renderAttackHitbox(context);
+    player.updateProjectiles();
+    player.renderProjectiles(context);
+    collidingWithBoundaries(player, canvas);
+    checkIfOnPlatform(player, platforms);
+    handleTopCollisions(player, tops);
+    handleBottomCollisions(player, bottoms);
+    handleWallCollisions(player, walls);
+    
+
+  
 
     //COMBAT SYSTEM
     if (player.isAttacking) {
@@ -127,19 +161,68 @@ export function gameLoop() {
             }
         })
     });
+    if (player.health <= 0) {
+        player.die();
+        document.getElementById('gameOverScreen').style.display = 'flex';
+    }
+
 
     //Levels
-    if (enemies.length === 0){
+    if (level === 1 && enemies.length === 0){
+        level++
         currentLevel = new Level(level2Data);
         currentLevel.load();
         enemies = currentLevel.enemies;
         npcs = currentLevel.npcs;
         platforms = currentLevel.platforms;
         potions = currentLevel.potions;
+        walls = currentLevel.walls;
+        tops = currentLevel.tops;
+        bottoms = currentLevel.bottoms;
+    }
+    if (level === 2 && enemies.length === 0){
+        level++
+        currentLevel = new Level(level3Data);
+        currentLevel.load();
+        enemies = currentLevel.enemies;
+        npcs = currentLevel.npcs;
+        platforms = currentLevel.platforms;
+        potions = currentLevel.potions;
+        walls = currentLevel.walls;
+        tops = currentLevel.tops;
+        bottoms = currentLevel.bottoms;
+    }
+    if (level === 3 && enemies.length === 0){
+        level++
+        currentLevel = new Level(level4Data);
+        currentLevel.load();
+        enemies = currentLevel.enemies;
+        npcs = currentLevel.npcs;
+        platforms = currentLevel.platforms;
+        potions = currentLevel.potions;
+        walls = currentLevel.walls;
+        tops = currentLevel.tops;
+        bottoms = currentLevel.bottoms;
     }
 
     camera.resetTransformations(context);
     renderUI(context, player);
 
     requestAnimationFrame(gameLoop);
+}
+
+export function resetGameState() {
+    level = 1;
+    currentLevel = new Level(level1Data);
+    currentLevel.load(); 
+    enemies = currentLevel.enemies;
+    npcs = currentLevel.npcs;
+    potions = currentLevel.potions;
+    platforms = currentLevel.platforms;
+    walls = currentLevel.walls;
+    tops = currentLevel.tops;
+    bottoms = currentLevel.bottoms;
+    players = currentLevel.player;
+    player = players[0];
+
 }
