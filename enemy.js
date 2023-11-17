@@ -58,10 +58,9 @@ export class Enemy {
 
     }
     #setHealth(newHealth) {
-        if(newHealth >= 0){
             this.health = newHealth;
             console.log(this.health)
-        } else this.die();
+        
     }
     move(direction) {
         this.vX += direction * this.acceleration;
@@ -77,9 +76,12 @@ export class Enemy {
 
         if (currentTime - this.lastHitTime >= this.hitCooldown) {
             const newHealth = this.health - damage / this.defencePower;
-            this.#setHealth(newHealth);
+            if(newHealth >= 1){
+                this.#setHealth(newHealth);
 
-            this.lastHitTime = currentTime;
+                this.lastHitTime = currentTime;
+
+            } else if (newHealth <= 0) {this.die();}
         }
     }
     onGround() {
