@@ -34,10 +34,10 @@ export const level2Data = {
         { x: 100, y: 500}
     ],
     enemies: [
-        { id: 1, x: 200, y: 850, health: 100, attackPower: 15, defencePower: 15, experience: 60 },
+        { id: 1, x: 200, y: 850, health: 100, attackPower: 15, defencePower: 10, experience: 60 },
         { id: 2, x: 700, y: 650, health: 80, attackPower: 20, defencePower: 10, experience: 50 },
         { id: 3, x: 450, y: 550, health: 50, attackPower: 10, defencePower: 20, experience: 40 },
-        { id: 4, x: 850, y: 350, health: 90, attackPower: 15, defencePower: 15, experience: 70 },
+        { id: 4, x: 850, y: 350, health: 90, attackPower: 15, defencePower: 10, experience: 70 },
         { id: 5, x: 300, y: 250, health: 70, attackPower: 20, defencePower: 10, experience: 80 },
         { id: 6, x: 900, y: 150, health: 60, attackPower: 10, defencePower: 10, experience: 30 },
     ],
@@ -90,7 +90,7 @@ export const level3Data = {
         { x: 100, y: 500}
     ],
     enemies: [
-        { id: 1, x: 400, y: 800, health: 50, attackPower: 15, defencePower: 15, experience: 60 },
+        { id: 1, x: 400, y: 800, health: 50, attackPower: 15, defencePower: 10, experience: 60 },
         { id: 2, x: 800, y: 600, health: 60, attackPower: 20, defencePower: 10, experience: 50 },
         { id: 3, x: 600, y: 400, health: 70, attackPower: 10, defencePower: 20, experience: 40 }
     ],
@@ -149,12 +149,12 @@ export const level3Data = {
 
 export const level4Data = {
     enemies: [
-        { id: 1, x: 200, y: 800, health: 80, attackPower: 20, defencePower: 15, experience: 60 },
+        { id: 1, x: 200, y: 800, health: 80, attackPower: 20, defencePower: 10, experience: 60 },
         { id: 2, x: 500, y: 700, health: 70, attackPower: 15, defencePower: 20, experience: 50 },
         { id: 3, x: 800, y: 600, health: 90, attackPower: 25, defencePower: 10, experience: 70 },
-        { id: 4, x: 300, y: 500, health: 60, attackPower: 20, defencePower: 15, experience: 40 },
+        { id: 4, x: 300, y: 500, health: 60, attackPower: 20, defencePower: 10, experience: 40 },
         { id: 5, x: 600, y: 400, health: 85, attackPower: 30, defencePower: 10, experience: 80 },
-        { id: 6, x: 900, y: 300, health: 75, attackPower: 25, defencePower: 15, experience: 60 }
+        { id: 6, x: 900, y: 300, health: 75, attackPower: 25, defencePower: 10, experience: 60 }
     ],
     npcs: [
         { id: 1, x: 50, y: 850, health: 100, attackPower: 10, defencePower: 10, experience: 50 }
