@@ -36,7 +36,7 @@ export class HealthPotion {
             context.fillRect(this.x, this.y, this.width, this.height);
         }
     }
-    update() {
+    update(deltaTime) {
         this.vX *= FRICTION;
 
         this.x += this.vX;

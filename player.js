@@ -8,12 +8,12 @@ export class Player {
         this.x = x;
         this.y = y;
 
-        this.width = 50;
+        this.width = 60;
         this.height = 50;
 
         //Rendering
         this.sprite = new Image();
-        this.sprite.src = 'assets/sinfall-eggplant.png';
+        this.sprite.src = 'assets/player.gif';
         this.attackSpriteRight = new Image();
         this.attackSpriteRight.src = 'assets/sinfall-melee-right.png'
         this.attackSpriteLeft = new Image();
@@ -74,7 +74,7 @@ export class Player {
         }
     }
 
-    update() {
+    update(deltaTime) {
         const currentTime = Date.now()
 
         this.vX *= FRICTION;
@@ -101,12 +101,12 @@ export class Player {
 
     }
 
-    handleInput(input) {
+    handleInput(input, deltaTime) {
         if (input.left) {
-            this.move(-1);
+            this.move(-1, deltaTime);
         }
         if (input.right) {
-            this.move(1);
+            this.move(1, deltaTime);
         }
         if (input.up) {
             this.direction = "up";
@@ -170,9 +170,9 @@ export class Player {
         }
     }
 
-    move(direction) {
+    move(direction, deltaTime) {
         this.direction = direction > 0 ? 'right' : 'left';
-        this.vX += direction * this.acceleration;
+        this.vX += direction * this.acceleration * deltaTime;
         this.vX = Math.max(-this.maxSpeed, Math.min(this.vX, this.maxSpeed));
     }
 

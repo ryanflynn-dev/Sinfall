@@ -8,11 +8,11 @@ export class Enemy {
         this.y = y;
 
         this.width = 50;
-        this.height = 50;
+        this.height = 75;
 
         //Rendering
         this.sprite = new Image();
-        this.sprite.src = 'assets/sinfall-peach.png';
+        this.sprite.src = 'assets/enemy.png';
 
         //Movement
         this.vX = 0;
@@ -42,7 +42,7 @@ export class Enemy {
             context.fillRect(this.x, this.y, this.width, this.height);
         }
     }
-    update() {
+    update(deltaTime) {
         this.vX *= FRICTION;
 
         this.x += this.vX;
