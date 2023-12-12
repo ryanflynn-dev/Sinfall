@@ -20,6 +20,6 @@ document.getElementById('replayButton').addEventListener('click', () => {
 
 
 function startGame() {
-    gameLoop();
+    requestAnimationFrame(gameLoop);
 }
 

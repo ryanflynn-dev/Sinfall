@@ -18,6 +18,7 @@ backgroundImage.src = 'assets/sinfall-background.png';
 
 
 //WORLD
+let lastTime = 0;
 let level = 1;
 let currentLevel = new Level(level1Data);
 currentLevel.load(); 
@@ -38,15 +39,16 @@ let player = players[0];
 
 initializeInputHandlers();
 
-export function gameLoop() {
+export function gameLoop(timestamp) {
     const camera = new Camera(player, canvas.width, canvas.height);
-   
+    let deltaTime = timestamp - lastTime;
+    lastTime = timestamp;
 
     //CANVAS
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     //WORLD
-    camera.update();
+    camera.update(deltaTime);
     camera.applyTransformations(context);
     if (backgroundImage.complete) {
         context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
@@ -68,7 +70,7 @@ export function gameLoop() {
             player.gainExp(enemies[i].giveExp());
             enemies.splice(i, 1);
         } else {
-            enemies[i].update();
+            enemies[i].update(deltaTime);
             enemies[i].render(context);
         }
     }
@@ -89,7 +91,7 @@ export function gameLoop() {
         if (!npcs[i].isAlive){
 
         } else {
-            npcs[i].update();
+            npcs[i].update(deltaTime);
             npcs[i].render(context);
         }
     }
@@ -110,7 +112,7 @@ export function gameLoop() {
             player.gainHealth(potions[i].giveHealth());
             potions.splice(i, 1);
         } else {
-            potions[i].update();
+            potions[i].update(deltaTime);
             potions[i].render(context);
         }
     }
@@ -128,11 +130,11 @@ export function gameLoop() {
 
     //PLAYER
     const input = getInputState();
-    player.handleInput(input);
-    player.update();
+    player.handleInput(input, deltaTime);
+    player.update(deltaTime);
     player.render(context);
     player.renderAttackHitbox(context);
-    player.updateProjectiles();
+    player.updateProjectiles(deltaTime);
     player.renderProjectiles(context);
     collidingWithBoundaries(player, canvas);
     checkIfOnPlatform(player, platforms);

@@ -1,6 +1,6 @@
 export const level1Data = {
     player: [
-        { x: 100, y: 500}
+        { x: 100, y: 500 }
     ],
     enemies: [
         { id: 1, x: 300, y: 800, health: 10, attackPower: 5, defencePower: 5, experience: 50 },
@@ -31,15 +31,15 @@ export const level1Data = {
 
 export const level2Data = {
     player: [
-        { x: 100, y: 500}
+        { x: 100, y: 500 }
     ],
     enemies: [
-        { id: 1, x: 200, y: 850, health: 100, attackPower: 15, defencePower: 10, experience: 60 },
-        { id: 2, x: 700, y: 650, health: 80, attackPower: 20, defencePower: 10, experience: 50 },
-        { id: 3, x: 450, y: 550, health: 50, attackPower: 10, defencePower: 20, experience: 40 },
-        { id: 4, x: 850, y: 350, health: 90, attackPower: 15, defencePower: 10, experience: 70 },
-        { id: 5, x: 300, y: 250, health: 70, attackPower: 20, defencePower: 10, experience: 80 },
-        { id: 6, x: 900, y: 150, health: 60, attackPower: 10, defencePower: 10, experience: 30 },
+        { id: 1, x: 200, y: 850, health: 60, attackPower: 15, defencePower: 10, experience: 60 },
+        { id: 2, x: 700, y: 650, health: 50, attackPower: 20, defencePower: 10, experience: 50 },
+        { id: 3, x: 450, y: 550, health: 50, attackPower: 10, defencePower: 5, experience: 40 },
+        { id: 4, x: 850, y: 350, health: 50, attackPower: 15, defencePower: 10, experience: 70 },
+        { id: 5, x: 300, y: 250, health: 50, attackPower: 20, defencePower: 10, experience: 80 },
+        { id: 6, x: 900, y: 150, health: 40, attackPower: 10, defencePower: 10, experience: 30 },
     ],
     npcs: [
         { id: 1, x: 250, y: 850, health: 100, attackPower: 10, defencePower: 10, experience: 50 },
@@ -87,7 +87,7 @@ export const level2Data = {
 
 export const level3Data = {
     player: [
-        { x: 100, y: 500}
+        { x: 100, y: 500 }
     ],
     enemies: [
         { id: 1, x: 400, y: 800, health: 50, attackPower: 15, defencePower: 10, experience: 60 },
@@ -148,6 +148,9 @@ export const level3Data = {
 };
 
 export const level4Data = {
+    player: [
+        { x: 100, y: 500 }
+    ],
     enemies: [
         { id: 1, x: 200, y: 800, health: 80, attackPower: 20, defencePower: 10, experience: 60 },
         { id: 2, x: 500, y: 700, health: 70, attackPower: 15, defencePower: 20, experience: 50 },

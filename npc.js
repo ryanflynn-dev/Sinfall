@@ -12,7 +12,7 @@ export class Npc {
 
         //Rendering
         this.sprite = new Image();
-        this.sprite.src = 'assets/sinfall-tomato.png';
+        this.sprite.src = 'assets/npc.gif';
 
         //Movement
         this.vX = 0;

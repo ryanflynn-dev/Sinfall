@@ -5,7 +5,7 @@ export class Camera {
         this.height = height;
         this.zoom = 1.5;
     }
-    update() {
+    update(deltaTime) {
         this.x = -this.player.x + this.width / 2 / this.zoom;
         this.y = -this.player.y + this.height / 2 / this.zoom;
 
