@@ -1,5 +1,5 @@
 export const GRAVITY = 1;
-export const FRICTION = 0.9;
+export const FRICTION = 0.65;
 export const GROUND = 1040;
 
 export function isColliding(entity1, entity2) {
